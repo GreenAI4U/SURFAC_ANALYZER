@@ -1,0 +1,7 @@
+MaskPath,ImageID,LabelName,BoxID,BoxXMin,BoxXMax,BoxYMin,BoxYMax,PredictedIoU,Clicks
+0002_jpgrf69a6d2b56b92e9e882d13da467ec2271_crease_00000000.png,0002_jpg.rf.69a6d2b56b92e9e882d13da467ec2271,Crease,00000000,,,,,,
+0002_jpgrf69a6d2b56b92e9e882d13da467ec2271_crease_00000001.png,0002_jpg.rf.69a6d2b56b92e9e882d13da467ec2271,Crease,00000001,,,,,,
+0002_jpgrf69a6d2b56b92e9e882d13da467ec2271_darkspot_00000002.png,0002_jpg.rf.69a6d2b56b92e9e882d13da467ec2271,DarkSpot,00000002,,,,,,
+0004_jpgrf1d1168a386d97abf166c7c80e7dcf308_crease_00000000.png,0004_jpg.rf.1d1168a386d97abf166c7c80e7dcf308,Crease,00000000,,,,,,
+0004_jpgrf1d1168a386d97abf166c7c80e7dcf308_crease_00000001.png,0004_jpg.rf.1d1168a386d97abf166c7c80e7dcf308,Crease,00000001,,,,,,
+0004_jpgrf1d1168a386d97abf166c7c80e7dcf308_darkspot_00000002.png,0004_jpg.rf.1d1168a386d97abf166c7c80e7dcf308,DarkSpot,00000002,,,,,,

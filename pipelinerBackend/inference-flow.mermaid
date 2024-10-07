@@ -1,0 +1,35 @@
+graph TD
+    Start["Start"] --> A[Initialize Camera Settings]
+    A --> B[Loop through Device List]
+    B --> C{Device Found?}
+    C -- Yes --> D[Create Camera Instance]
+    C -- No --> E[Update Camera List and Retry]
+    E --> D
+
+    D --> F[Configure Camera Resolution and Format]
+    F --> G[Start Camera Stream]
+
+    G --> H[Capture Frame]
+    H --> I[Convert Bayer Image to RGB]
+    I --> J[Resize Image]
+    
+    J --> K[Adjust Exposure, Contrast, and Saturation]
+    K --> L[Convert Image to HSV and Back to RGB]
+    
+    L --> M{Realtime Prediction Enabled?}
+    M -- Yes --> N[Check Prediction Path]
+    M -- No --> O[Skip Prediction]
+    
+    N --> P{Path Updated?}
+    P -- Yes --> Q[Update Model with New Path]
+    P -- No --> R[Use Current Model]
+    
+    Q --> R
+
+    R --> S[Run YOLO Prediction]
+    S --> T[Draw Prediction Results on Image]
+    
+    T --> U[Convert Image to Base64]
+    U --> V[Yield Image as JPEG Stream]
+
+    V --> H
