@@ -28,8 +28,9 @@ graph TD
 
     R --> S[Run YOLO Prediction]
     S --> T[Draw Prediction Results on Image]
-    
-    T --> U[Convert Image to Base64]
+    T --> z[Save the result to excel file]
+
+    z --> U[Convert Image to Base64]
     U --> V[Yield Image as JPEG Stream]
 
     V --> H
