@@ -690,6 +690,13 @@ def webcam(cameraIndex, project, modelName):
             )
         except:
             pass
+    filename = str(datetime.now().strftime("%Y-%m-%d-%H-%M-%S"))
+    fields = ["name", "X", "Y", "area", "point", "confidence"]
+    with open(
+        "projects/" + project + "/output/" + modelName + filename + ".csv", "w"
+    ) as csvfile:
+        csvwriter = csv.DictWriter(csvfile, fieldnames=fields)
+        csvwriter.writeheader()
     while True:
         success, image = caps["Camera" + str(cameraIndex)].read()
         if success:
@@ -767,6 +774,49 @@ def webcam(cameraIndex, project, modelName):
                             2,
                             cv2.LINE_AA,
                         )
+                        xy = box.xyxy.tolist()[0]
+                        area_pixels = (xy[2] - xy[0]) * (xy[3] - xy[1])
+                        pixel_to_inch = (
+                            0.01  # Replace with your actual conversion factor
+                        )
+                        area_inches = area_pixels * pixel_to_inch**2
+                        points = 0
+                        if area_inches > 0 and area_inches < 3:
+                            points = 1
+                        elif area_inches > 3 and area_inches < 6:
+                            points = 2
+                        elif area_inches > 6 and area_inches < 9:
+                            points = 3
+                        elif area_inches > 9:
+                            points = 4
+
+                        print("Area area_inches = ", area_inches)
+                        print("Names = ", names[int(box.cls)])
+                        print("Center points = ", centerX, centerY)
+                        print("Points = ", points)
+                        print("id:= ", count)
+                        temp = []
+                        temp.append(names[int(box.cls)])
+                        temp.append(int(centerX / 81))
+                        temp.append(centerY)
+                        temp.append(area_inches)
+                        temp.append(points)
+                        temp.append(confidence)
+                        data.append(temp)
+
+                    try:
+                        if len(result.boxes) > 0:
+                            t1 = threading.Thread(target=playSoundThread)
+                            t1.start()
+                    except:
+                        pass
+
+            with open(
+                "projects/" + project + "/output/" + modelName + filename + ".csv", "a"
+            ) as csvfile:
+                csvwriter = csv.writer(csvfile)
+                for row in data:
+                    csvwriter.writerow(row)
 
             # convert the image to base64
             _, img_encoded = cv2.imencode(".jpg", np.array(image_np))
