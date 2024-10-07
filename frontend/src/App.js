@@ -36,8 +36,6 @@ export default function App() {
                     <Route path="/image-gallery" element={<ImageGallery />} />
                     <Route path="/annotator-allocation" element={<AnnotatorAlloaction />} />
                     <Route path="/setting" element={<Settings />} />
-
-                    <Route path="/text" element={<TextAnotator />} />
                 </Routes>
             </div>
         </Router>
