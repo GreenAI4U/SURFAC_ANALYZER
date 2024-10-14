@@ -34,6 +34,8 @@ import random
 import base64
 import time
 from threading import Thread
+import serial
+import keyboard
 # import genicam.genapi as ge
 # from harvesters.core import Harvester
 
@@ -53,6 +55,7 @@ os.environ['YOLO_VERBOSE'] = 'False'
 realtimePredict = False
 caps = {}
 cameraSetting = {}
+ser = serial.Serial("COM4", 9600)
 try:
     device = torch.device("cuda")
 except:
@@ -63,6 +66,11 @@ except:
 #         CVATClient = client
 # except:
 #     print("CVAT SDK Not Loaded")
+
+
+def playSoundThread():
+    # ser.write(bytearray("0", "ascii"))
+    playsound("./api/ding.mp3")
 
 
 def createProject(name, labels):
@@ -673,6 +681,7 @@ def webcam(cameraIndex, project, modelName, outputFile):
     ) as csvfile:
         csvwriter = csv.DictWriter(csvfile, fieldnames=fields)
         csvwriter.writeheader()
+    start_tick = ser.readline()
     while True:
         success, image = caps["Camera" + str(cameraIndex)].read()
         if success:
@@ -728,6 +737,7 @@ def webcam(cameraIndex, project, modelName, outputFile):
                         boxCor = box.xyxy.tolist()[0]
                         centerX = boxCor[0] + ((boxCor[2] - boxCor[0]) / 2)
                         centerY = boxCor[1] + ((boxCor[3] - boxCor[1]) / 2)
+                        # centerY = ser.readline() - start_tick # y in mm
                         confidence = box.conf.tolist()[0]
                         xy = box.xyxy.tolist()[0]
                         area_pixels = (xy[2] - xy[0]) * (xy[3] - xy[1])
