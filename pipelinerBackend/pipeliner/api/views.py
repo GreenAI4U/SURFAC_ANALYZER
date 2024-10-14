@@ -675,7 +675,7 @@ def webcam(cameraIndex, project, modelName, outputFile):
         except:
             pass
     filename = outputFile
-    fields = ["name", "X", "Y", "area", "point", "confidence"]
+    fields = ["Camera Index","name", "X", "Y", "area", "point", "confidence"]
     with open(
         "./projects/" + project + "/output/" + filename + ".csv", "w"
     ) as csvfile:
@@ -761,6 +761,7 @@ def webcam(cameraIndex, project, modelName, outputFile):
                         # print("Points = ", points)
                         # print("id:= ", count)
                         temp = []
+                        temp.append(cameraIndex)
                         temp.append(names[int(box.cls)])
                         temp.append(centerX)
                         temp.append(centerY)
