@@ -34,22 +34,22 @@ import random
 import base64
 import time
 from threading import Thread
-import genicam.genapi as ge
-from harvesters.core import Harvester
-
+# import genicam.genapi as ge
+# from harvesters.core import Harvester
 
 width = int(4096)
 height = int(2176)
-h = Harvester()
-h.add_file("D:/Balluff/ImpactAcquire/bin/x64/mvGenTLProducer.cti")
-h.update()
-for i in h.device_info_list:
-    print(i.serial_number)
+# h = Harvester()
+# h.add_file("D:/Balluff/ImpactAcquire/bin/x64/mvGenTLProducer.cti")
+# h.update()
+# for i in h.device_info_list:
+#     print(i.serial_number)
 
 predictPath = ""
 predictModel = None
 predictFolder = ""
 os.environ["WANDB_DISABLED"] = "true"
+os.environ['YOLO_VERBOSE'] = 'False'
 realtimePredict = False
 caps = {}
 cameraSetting = {}
@@ -58,11 +58,11 @@ try:
 except:
     device = torch.device("cpu")
 
-try:
-    with make_client(host="app.cvat.ai", credentials=("basappa", "Tipl@123")) as client:
-        CVATClient = client
-except:
-    print("CVAT SDK Not Loaded")
+# try:
+#     with make_client(host="app.cvat.ai", credentials=("basappa", "Tipl@123")) as client:
+#         CVATClient = client
+# except:
+#     print("CVAT SDK Not Loaded")
 
 
 def createProject(name, labels):
@@ -108,7 +108,7 @@ def extractFolder(request):
                     extract_folder = str(datetime.now().strftime("%Y-%m-%d-%H-%M-%S"))
                     temp_folder = "temp/" + projectName + "/"
                     target_folder = (
-                        "projects/" + projectName + "/datasets/" + datasetName + "/"
+                        "./projects/" + projectName + "/datasets/" + datasetName + "/"
                     )
                     project = Fabric.objects.filter(fabricName=projectName).first()
                     # Extract the files from the zip file to the target folder
@@ -182,7 +182,7 @@ def extractFolder(request):
                     # Create a folder name based on the current date and time
                     extract_folder = str(datetime.now().strftime("%Y-%m-%d-%H-%M-%S"))
                     # Set the target folder for the extracted files
-                    target_folder = "projects/" + projectName + "/datasets/"
+                    target_folder = "./projects/" + projectName + "/datasets/"
                     project = Fabric.objects.filter(fabricName=projectName).first()
                     # Extract the files from the zip file to the target folder
                     with zipfile.ZipFile(dataset, "r") as zip_ref:
@@ -281,7 +281,7 @@ def projectFecther(request):
         # Loop through all files and folders in the "projects" directory
         for folder in os.listdir("projects"):
             # Check if the current item is a directory
-            if os.path.isdir("projects/" + folder):
+            if os.path.isdir("./projects/" + folder):
                 # If it is, add it to the list of project folders
                 folders.append(folder)
         # Return the list of project folders as a JSON object
@@ -302,28 +302,28 @@ def projectDetails(request):
         fabrics = Fabric.objects.all()
         # for folder in os.listdir("projects"):
         for fabric in fabrics:
-            if os.path.isdir("projects/" + fabric.fabricName):
+            if os.path.isdir("./projects/" + fabric.fabricName):
                 datasetCount = 0
-                for item in os.listdir("projects/" + fabric.fabricName + "/datasets"):
+                for item in os.listdir("./projects/" + fabric.fabricName + "/datasets"):
                     item_path = os.path.join(
-                        "projects/" + fabric.fabricName + "/datasets", item
+                        "./projects/" + fabric.fabricName + "/datasets", item
                     )
                     if os.path.isdir(item_path):
                         datasetCount += 1
 
                 modelCount = 0
-                for item in os.listdir("projects/" + fabric.fabricName + "/models"):
+                for item in os.listdir("./projects/" + fabric.fabricName + "/models"):
                     item_path = os.path.join(
-                        "projects/" + fabric.fabricName + "/models", item
+                        "./projects/" + fabric.fabricName + "/models", item
                     )
                     if os.path.isdir(item_path):
                         modelCount += 1
 
                 sampleImages = []
 
-                for item in os.listdir("projects/" + fabric.fabricName + "/samples"):
+                for item in os.listdir("./projects/" + fabric.fabricName + "/samples"):
                     item_path = os.path.join(
-                        "projects/" + fabric.fabricName + "/samples", item
+                        "./projects/" + fabric.fabricName + "/samples", item
                     )
                     if os.path.isfile(item_path):
                         sampleImages.append(fabric.fabricName + "/samples/" + item)
@@ -354,9 +354,9 @@ def datasetFecther(request):
         # Initialize an empty list to store the dataset folders
         folders = []
         # Loop through all files and folders in the "datasets" directory for the specified project
-        for folder in os.listdir("projects/" + project + "/datasets"):
+        for folder in os.listdir("./projects/" + project + "/datasets"):
             # Check if the current item is a directory
-            if os.path.isdir("projects/" + project + "/datasets/" + folder):
+            if os.path.isdir("./projects/" + project + "/datasets/" + folder):
                 # If it is, add it to the list of dataset folders
                 folders.append(folder)
         # Return the list of dataset folders as a JSON object
@@ -380,9 +380,9 @@ def modelFecther(request):
         # Initialize an empty list to store the model folders
         # folders = []
         # Loop through all files and folders in the "models" directory for the specified project
-        for folder in os.listdir("projects/" + project + "/models"):
+        for folder in os.listdir("./projects/" + project + "/models"):
             # Check if the current item is a directory
-            if os.path.isdir("projects/" + project + "/models/" + folder):
+            if os.path.isdir("./projects/" + project + "/models/" + folder):
                 # If it is, add it to the list of model folders
                 folders.append(folder)
         # Return the list of model folders as a JSON object
@@ -402,8 +402,8 @@ def basemodelFecther(request):
         project = request.GET.get("project", False)
         folders = {"baseModel": [], "projectModel": []}
 
-        if os.path.isdir("projects/" + str(project)):
-            for folder in os.listdir("projects/" + project + "/models"):
+        if os.path.isdir("./projects/" + str(project)):
+            for folder in os.listdir("./projects/" + project + "/models"):
                 folders["projectModel"].append(folder)
         # Loop through all files and folders in the "models" directory for the specified project
         # Initialize an empty list to store the base model folders
@@ -432,9 +432,9 @@ def imageGallery(request):
         # Initialize an empty dictionary to store the image paths
         data = {}
         # Define the paths to the test, train, and validation image folders
-        testPath = "projects/" + project + "/datasets/" + dataset + "/test/images/"
-        trainPath = "projects/" + project + "/datasets/" + dataset + "/train/images/"
-        validPath = "projects/" + project + "/datasets/" + dataset + "/valid/images/"
+        testPath = "./projects/" + project + "/datasets/" + dataset + "/test/images/"
+        trainPath = "./projects/" + project + "/datasets/" + dataset + "/train/images/"
+        validPath = "./projects/" + project + "/datasets/" + dataset + "/valid/images/"
         # Initialize empty lists for the test, train, and validation image paths
         data["test"] = []
         data["train"] = []
@@ -483,7 +483,7 @@ def modelTraining(request):
             if resume == "true":
                 resume = True
                 model = YOLO(
-                    "projects/" + project + "/models/" + name + "/weights/best.pt"
+                    "./projects/" + project + "/models/" + name + "/weights/best.pt"
                 )
                 name = baseModel
             else:
@@ -543,48 +543,47 @@ def modelPrediction(request):
             # If it is, save the image to the project's images directory
             image = request.FILES["image"]
             # save the image to the project's images directory
-            with open("projects/" + project + "/images/" + image.name, "wb+") as f:
+            with open("./projects/" + project + "/images/" + image.name, "wb+") as f:
                 f.write(image.read())
-            # image.save("projects/" + project + "/images/" + image.filename)
+            # image.save("./projects/" + project + "/images/" + image.filename)
             # Check if the current model is different from the previous prediction model
             if (
-                "projects/" + project + "/models/" + modelName + "/weights/best.pt"
+                "./projects/" + project + "/models/" + modelName + "/weights/best.pt"
                 != predictPath
             ):
                 # If it is, update the prediction path, model, and folder
                 predictPath = (
-                    "projects/" + project + "/models/" + modelName + "/weights/best.pt"
+                    "./projects/" + project + "/models/" + modelName + "/weights/best.pt"
                 )
                 predictModel = YOLO(
-                    "projects/" + project + "/models/" + modelName + "/weights/best.pt"
+                    "./projects/" + project + "/models/" + modelName + "/weights/best.pt"
                 )
-                predictFolder = datetime.now().strftime("%Y-%m-%d-%H%M%S")
             try:
                 # Predict the objects in the image using the YOLO model
                 results = predictModel(
-                    "projects/" + project + "/images/" + image.name,
+                    "./projects/" + project + "/images/" + image.name,
                     retina_masks=True,
                     iou=0.1,
                     conf=0.3,
                     imgsz=640,
-                    project="projects/" + project + "/predicts/",
-                    name=predictFolder,
-                    save=True,
-                    show_conf=False,
-                    show_labels=False,
-                    show_boxes=False,
+                    project="./projects/" + project,
+                    name="predicts",
+                    save=False,
+                    show_conf=True,
+                    show_labels=True,
+                    show_boxes=True,
                 )
                 for result in results:
                     orignalPath = result.path
                     path = (
-                        "projects/"
+                        "./projects/"
                         + project
                         + "/predicts/"
-                        + predictFolder
-                        + "/"
                         + image.name
                     )
                     imageCv = cv2.imread(path)
+                    image_np = result.plot()
+                    cv2.imwrite(path, image_np)
                     for box in result.boxes:
                         boxCor = box.xyxy.tolist()[0]
                         centerX = boxCor[0] + ((boxCor[2] - boxCor[0]) / 2)
@@ -592,59 +591,35 @@ def modelPrediction(request):
                         confident = box.conf.tolist()[0]
                         # plot the point on the image
                         imageHeight, imageWidth, _ = imageCv.shape
-                        imageCv = cv2.circle(
-                            imageCv,
-                            (int(centerX), int(centerY)),
-                            10,
-                            (0, 255, 255),
-                            10,
-                        )
-                        imageCv = cv2.rectangle(
-                            imageCv,
-                            (int(boxCor[0]), int(boxCor[1])),
-                            (int(boxCor[2]), int(boxCor[3])),
-                            (0, 255, 255),
-                            1,
-                        )
-                        imageCv = cv2.putText(
-                            imageCv,
-                            str(confident)[:4],
-                            (int(boxCor[0]), int(boxCor[1]) - 5),
-                            cv2.FONT_HERSHEY_SIMPLEX,
-                            1,
-                            (0, 255, 255),
-                            2,
-                            cv2.LINE_AA,
-                        )
-                        newPredict = PredictionData()
-                        newPredict.fabric = Fabric.objects.filter(
-                            fabricName=project
-                        ).first()
-                        newPredict.centroid = str(centerX)[:4] + "," + str(centerY)[:4]
-                        newPredict.boundingBox = (
-                            str(boxCor[0])[:4]
-                            + ","
-                            + str(boxCor[1])[:4]
-                            + ","
-                            + str(boxCor[2])[:4]
-                            + ","
-                            + str(boxCor[3])[:4]
-                        )
-                        newPredict.imageRaw = (
-                            "projects/" + project + "/images/" + image.name
-                        )
-                        newPredict.imageAnnotated = path
-                        newPredict.confidence = confident
-                        newPredict.save()
-                    # save the image
-                    cv2.imwrite(path, imageCv)
+                        try:
+                            newPredict = PredictionData()
+                            newPredict.fabric = Fabric.objects.filter(
+                                fabricName=project
+                            ).first()
+                            newPredict.centroid = str(centerX)[:4] + "," + str(centerY)[:4]
+                            newPredict.boundingBox = (
+                                str(boxCor[0])[:4]
+                                + ","
+                                + str(boxCor[1])[:4]
+                                + ","
+                                + str(boxCor[2])[:4]
+                                + ","
+                                + str(boxCor[3])[:4]
+                            )
+                            newPredict.imageRaw = (
+                                "./projects/" + project + "/images/" + image.name
+                            )
+                            newPredict.imageAnnotated = path
+                            newPredict.confidence = confident
+                            newPredict.save()
+                        except Exception as e:
+                            print(e)
+                    
                 return HttpResponse(
                     json.dumps(
                         {
                             "path": project
                             + "/predicts/"
-                            + predictFolder
-                            + "/"
                             + image.name,
                             "results": str(results),
                         }
@@ -674,12 +649,13 @@ def modelPrediction(request):
         )
 
 
-def webcam(cameraIndex, project, modelName):
+def webcam(cameraIndex, project, modelName, outputFile):
     global predictPath, predictModel, predictFolder, caps, realtimePredict, cameraSetting, device
     cameraSetting["Camera" + str(cameraIndex)] = {
         "exposure": 25,
         "saturation": 1.0,
         "contrast": 1.0,
+        "confidence": 0.1,
     }
     try:
         caps["Camera" + str(cameraIndex)] = cv2.VideoCapture(int(cameraIndex))
@@ -690,10 +666,10 @@ def webcam(cameraIndex, project, modelName):
             )
         except:
             pass
-    filename = str(datetime.now().strftime("%Y-%m-%d-%H-%M-%S"))
+    filename = outputFile
     fields = ["name", "X", "Y", "area", "point", "confidence"]
     with open(
-        "projects/" + project + "/output/" + modelName + filename + ".csv", "w"
+        "./projects/" + project + "/output/" + filename + ".csv", "w"
     ) as csvfile:
         csvwriter = csv.DictWriter(csvfile, fieldnames=fields)
         csvwriter.writeheader()
@@ -711,69 +687,48 @@ def webcam(cameraIndex, project, modelName):
                 hsv[:, :, 1] * cameraSetting["Camera" + str(cameraIndex)]["saturation"]
             )
             image_np = cv2.cvtColor(hsv, cv2.COLOR_HSV2RGB)
+            data = []
             if realtimePredict:
                 if (
-                    "projects/" + project + "/models/" + modelName + "/weights/best.pt"
+                    "./projects/" + project + "/models/" + modelName + "/weights/best.pt"
                     != predictPath
                 ):
                     # If it is, update the prediction path, model, and folder
                     predictPath = (
-                        "projects/"
+                        "./projects/"
                         + project
                         + "/models/"
                         + modelName
                         + "/weights/best.pt"
                     )
                     predictModel = YOLO(
-                        "projects/"
+                        "./projects/"
                         + project
                         + "/models/"
                         + modelName
                         + "/weights/best.pt"
                     )
+                names = predictModel.names
                 results = predictModel(
                     source=image_np,
                     iou=0.1,
-                    conf=0.3,
+                    conf=cameraSetting["Camera" + str(cameraIndex)]["confidence"],
                     imgsz=256,
                     save=False,
-                    # show_conf=True,
-                    # show_labels=True,
-                    # show_boxes=True,
+                    show_conf=True,
+                    show_labels=True,
+                    show_boxes=True,
+                    
                 )
-
+                count = 0
                 for result in results:
+                    count = count + 1
+                    image_np = result.plot()
                     for box in result.boxes:
                         boxCor = box.xyxy.tolist()[0]
                         centerX = boxCor[0] + ((boxCor[2] - boxCor[0]) / 2)
                         centerY = boxCor[1] + ((boxCor[3] - boxCor[1]) / 2)
-                        confident = box.conf.tolist()[0]
-                        # plot the point on the image
-                        imageHeight, imageWidth, _ = image_np.shape
-                        image_np = cv2.circle(
-                            image_np,
-                            (int(centerX), int(centerY)),
-                            10,
-                            (0, 255, 255),
-                            10,
-                        )
-                        image_np = cv2.rectangle(
-                            image_np,
-                            (int(boxCor[0]), int(boxCor[1])),
-                            (int(boxCor[2]), int(boxCor[3])),
-                            (0, 255, 255),
-                            1,
-                        )
-                        image_np = cv2.putText(
-                            image_np,
-                            str(confident)[:4],
-                            (int(boxCor[0]), int(boxCor[1]) + 5),
-                            cv2.FONT_HERSHEY_SIMPLEX,
-                            1,
-                            (0, 255, 255),
-                            2,
-                            cv2.LINE_AA,
-                        )
+                        confidence = box.conf.tolist()[0]
                         xy = box.xyxy.tolist()[0]
                         area_pixels = (xy[2] - xy[0]) * (xy[3] - xy[1])
                         pixel_to_inch = (
@@ -790,14 +745,14 @@ def webcam(cameraIndex, project, modelName):
                         elif area_inches > 9:
                             points = 4
 
-                        print("Area area_inches = ", area_inches)
-                        print("Names = ", names[int(box.cls)])
-                        print("Center points = ", centerX, centerY)
-                        print("Points = ", points)
-                        print("id:= ", count)
+                        # print("Area area_inches = ", area_inches)
+                        # print("Names = ", names[int(box.cls)])
+                        # print("Center points = ", centerX, centerY)
+                        # print("Points = ", points)
+                        # print("id:= ", count)
                         temp = []
                         temp.append(names[int(box.cls)])
-                        temp.append(int(centerX / 81))
+                        temp.append(centerX)
                         temp.append(centerY)
                         temp.append(area_inches)
                         temp.append(points)
@@ -810,13 +765,13 @@ def webcam(cameraIndex, project, modelName):
                             t1.start()
                     except:
                         pass
-
-            with open(
-                "projects/" + project + "/output/" + modelName + filename + ".csv", "a"
-            ) as csvfile:
-                csvwriter = csv.writer(csvfile)
-                for row in data:
-                    csvwriter.writerow(row)
+            if len(data) > 0:
+                with open(
+                    "./projects/" + project + "/output/" + filename + ".csv", "a"
+                ) as csvfile:
+                    csvwriter = csv.writer(csvfile)
+                    for row in data:
+                        csvwriter.writerow(row)
 
             # convert the image to base64
             _, img_encoded = cv2.imencode(".jpg", np.array(image_np))
@@ -828,176 +783,176 @@ def webcam(cameraIndex, project, modelName):
             caps["Camera" + str(cameraIndex)].release()
 
 
-def mainCam(cameraIndex, project, modelName):
-    global predictPath, predictModel, predictFolder, caps, realtimePredict, h, cameraSetting, device
+# def mainCam(cameraIndex, project, modelName):
+#     global predictPath, predictModel, predictFolder, caps, realtimePredict, h, cameraSetting, device
 
-    index = 0
-    cameraSetting["Camera" + str(cameraIndex)] = {
-        "exposure": 25,
-        "saturation": 1.0,
-        "contrast": 1.0,
-    }
-    for i in h.device_info_list:
-        if i.serial_number == cameraIndex:
-            break
-        index = index + 1
-    try:
-        caps["Camera" + str(cameraIndex)] = h.create(index)
-    except:
-        h.update()
-        caps["Camera" + str(cameraIndex)] = h.create(index)
-    caps["Camera" + str(cameraIndex)].remote_device.node_map.Width.value = width
-    caps["Camera" + str(cameraIndex)].remote_device.node_map.Height.value = height
-    caps["Camera" + str(cameraIndex)].remote_device.node_map.PixelFormat.value = (
-        "BayerRG8"
-    )
-    caps["Camera" + str(cameraIndex)].remote_device.node_map.ChunkSelector.value = (
-        "ExposureTime"
-    )
-    caps["Camera" + str(cameraIndex)].remote_device.node_map.ExposureTime.set_value(
-        8000.0
-    )
-    caps["Camera" + str(cameraIndex)].start()
-    filename = str(datetime.now().strftime("%Y-%m-%d-%H-%M-%S"))
-    fields = ["name", "X", "Y", "area", "point", "confidence"]
-    with open(
-        "projects/" + project + "/output/" + modelName + filename + ".csv", "w"
-    ) as csvfile:
-        csvwriter = csv.DictWriter(csvfile, fieldnames=fields)
-        csvwriter.writeheader()
+#     index = 0
+#     cameraSetting["Camera" + str(cameraIndex)] = {
+#         "exposure": 25,
+#         "saturation": 1.0,
+#         "contrast": 1.0,
+#     }
+#     for i in h.device_info_list:
+#         if i.serial_number == cameraIndex:
+#             break
+#         index = index + 1
+#     try:
+#         caps["Camera" + str(cameraIndex)] = h.create(index)
+#     except:
+#         h.update()
+#         caps["Camera" + str(cameraIndex)] = h.create(index)
+#     caps["Camera" + str(cameraIndex)].remote_device.node_map.Width.value = width
+#     caps["Camera" + str(cameraIndex)].remote_device.node_map.Height.value = height
+#     caps["Camera" + str(cameraIndex)].remote_device.node_map.PixelFormat.value = (
+#         "BayerRG8"
+#     )
+#     caps["Camera" + str(cameraIndex)].remote_device.node_map.ChunkSelector.value = (
+#         "ExposureTime"
+#     )
+#     caps["Camera" + str(cameraIndex)].remote_device.node_map.ExposureTime.set_value(
+#         8000.0
+#     )
+#     caps["Camera" + str(cameraIndex)].start()
+#     filename = str(datetime.now().strftime("%Y-%m-%d-%H-%M-%S"))
+#     fields = ["name", "X", "Y", "area", "point", "confidence"]
+#     with open(
+#         "./projects/" + project + "/output/" + modelName + filename + ".csv", "w"
+#     ) as csvfile:
+#         csvwriter = csv.DictWriter(csvfile, fieldnames=fields)
+#         csvwriter.writeheader()
 
-    while True:
-        with caps["Camera" + str(cameraIndex)].fetch() as buffer:
-            component = buffer.payload.components[0]
-            image_np = component.data.reshape(height, width)
-            image_np = cv2.cvtColor(image_np, cv2.COLOR_BayerRG2RGB)
-            image_np = cv2.resize(image_np, (int(width / 4), int(height / 4)))
-            # increase the exposure
-            image_np = cv2.convertScaleAbs(
-                image_np,
-                alpha=cameraSetting["Camera" + str(cameraIndex)]["contrast"],
-                beta=cameraSetting["Camera" + str(cameraIndex)]["exposure"],
-            )
-            hsv = cv2.cvtColor(image_np, cv2.COLOR_RGB2HSV)
-            hsv[:, :, 1] = (
-                hsv[:, :, 1] * cameraSetting["Camera" + str(cameraIndex)]["saturation"]
-            )
-            image_np = cv2.cvtColor(hsv, cv2.COLOR_HSV2RGB)
+#     while True:
+#         with caps["Camera" + str(cameraIndex)].fetch() as buffer:
+#             component = buffer.payload.components[0]
+#             image_np = component.data.reshape(height, width)
+#             image_np = cv2.cvtColor(image_np, cv2.COLOR_BayerRG2RGB)
+#             image_np = cv2.resize(image_np, (int(width / 4), int(height / 4)))
+#             # increase the exposure
+#             image_np = cv2.convertScaleAbs(
+#                 image_np,
+#                 alpha=cameraSetting["Camera" + str(cameraIndex)]["contrast"],
+#                 beta=cameraSetting["Camera" + str(cameraIndex)]["exposure"],
+#             )
+#             hsv = cv2.cvtColor(image_np, cv2.COLOR_RGB2HSV)
+#             hsv[:, :, 1] = (
+#                 hsv[:, :, 1] * cameraSetting["Camera" + str(cameraIndex)]["saturation"]
+#             )
+#             image_np = cv2.cvtColor(hsv, cv2.COLOR_HSV2RGB)
 
-            if realtimePredict:
-                if (
-                    "projects/" + project + "/models/" + modelName + "/weights/best.pt"
-                    != predictPath
-                ):
-                    # If it is, update the prediction path, model, and folder
-                    predictPath = (
-                        "projects/"
-                        + project
-                        + "/models/"
-                        + modelName
-                        + "/weights/best.pt"
-                    )
-                    predictModel = YOLO(
-                        "projects/"
-                        + project
-                        + "/models/"
-                        + modelName
-                        + "/weights/best.pt"
-                    )
-                results = predictModel(
-                    source=image_np,
-                    iou=0.1,
-                    conf=0.1,
-                    imgsz=640,
-                    save=False
-                    # show_conf=True,
-                    # show_labels=True,
-                    # show_boxes=True,
-                )
+#             if realtimePredict:
+#                 if (
+#                     "./projects/" + project + "/models/" + modelName + "/weights/best.pt"
+#                     != predictPath
+#                 ):
+#                     # If it is, update the prediction path, model, and folder
+#                     predictPath = (
+#                         "./projects/"
+#                         + project
+#                         + "/models/"
+#                         + modelName
+#                         + "/weights/best.pt"
+#                     )
+#                     predictModel = YOLO(
+#                         "./projects/"
+#                         + project
+#                         + "/models/"
+#                         + modelName
+#                         + "/weights/best.pt"
+#                     )
+#                 results = predictModel(
+#                     source=image_np,
+#                     iou=0.1,
+#                     conf=0.1,
+#                     imgsz=640,
+#                     save=False
+#                     # show_conf=True,
+#                     # show_labels=True,
+#                     # show_boxes=True,
+#                 )
 
-                for result in results:
-                    for box in result.boxes:
-                        boxCor = box.xyxy.tolist()[0]
-                        centerX = boxCor[0] + ((boxCor[2] - boxCor[0]) / 2)
-                        centerY = boxCor[1] + ((boxCor[3] - boxCor[1]) / 2)
-                        confident = box.conf.tolist()[0]
-                        # plot the point on the image
-                        imageHeight, imageWidth, _ = image_np.shape
-                        image_np = cv2.circle(
-                            image_np,
-                            (int(centerX), int(centerY)),
-                            10,
-                            (0, 255, 255),
-                            10,
-                        )
-                        image_np = cv2.rectangle(
-                            image_np,
-                            (int(boxCor[0]), int(boxCor[1])),
-                            (int(boxCor[2]), int(boxCor[3])),
-                            (0, 255, 255),
-                            1,
-                        )
-                        image_np = cv2.putText(
-                            image_np,
-                            str(confident)[:4],
-                            (int(boxCor[0]), int(boxCor[1]) + 5),
-                            cv2.FONT_HERSHEY_SIMPLEX,
-                            1,
-                            (0, 255, 255),
-                            2,
-                            cv2.LINE_AA,
-                        )
-                        xy = box.xyxy.tolist()[0]
-                        area_pixels = (xy[2] - xy[0]) * (xy[3] - xy[1])
-                        pixel_to_inch = (
-                            0.01  # Replace with your actual conversion factor
-                        )
-                        area_inches = area_pixels * pixel_to_inch**2
-                        points = 0
-                        if area_inches > 0 and area_inches < 3:
-                            points = 1
-                        elif area_inches > 3 and area_inches < 6:
-                            points = 2
-                        elif area_inches > 6 and area_inches < 9:
-                            points = 3
-                        elif area_inches > 9:
-                            points = 4
+#                 for result in results:
+#                     for box in result.boxes:
+#                         boxCor = box.xyxy.tolist()[0]
+#                         centerX = boxCor[0] + ((boxCor[2] - boxCor[0]) / 2)
+#                         centerY = boxCor[1] + ((boxCor[3] - boxCor[1]) / 2)
+#                         confident = box.conf.tolist()[0]
+#                         # plot the point on the image
+#                         imageHeight, imageWidth, _ = image_np.shape
+#                         image_np = cv2.circle(
+#                             image_np,
+#                             (int(centerX), int(centerY)),
+#                             10,
+#                             (0, 255, 255),
+#                             10,
+#                         )
+#                         image_np = cv2.rectangle(
+#                             image_np,
+#                             (int(boxCor[0]), int(boxCor[1])),
+#                             (int(boxCor[2]), int(boxCor[3])),
+#                             (0, 255, 255),
+#                             1,
+#                         )
+#                         image_np = cv2.putText(
+#                             image_np,
+#                             str(confident)[:4],
+#                             (int(boxCor[0]), int(boxCor[1]) + 5),
+#                             cv2.FONT_HERSHEY_SIMPLEX,
+#                             1,
+#                             (0, 255, 255),
+#                             2,
+#                             cv2.LINE_AA,
+#                         )
+#                         xy = box.xyxy.tolist()[0]
+#                         area_pixels = (xy[2] - xy[0]) * (xy[3] - xy[1])
+#                         pixel_to_inch = (
+#                             0.01  # Replace with your actual conversion factor
+#                         )
+#                         area_inches = area_pixels * pixel_to_inch**2
+#                         points = 0
+#                         if area_inches > 0 and area_inches < 3:
+#                             points = 1
+#                         elif area_inches > 3 and area_inches < 6:
+#                             points = 2
+#                         elif area_inches > 6 and area_inches < 9:
+#                             points = 3
+#                         elif area_inches > 9:
+#                             points = 4
 
-                        print("Area area_inches = ", area_inches)
-                        print("Names = ", names[int(box.cls)])
-                        print("Center points = ", centerX, centerY)
-                        print("Points = ", points)
-                        print("id:= ", count)
-                        temp = []
-                        temp.append(names[int(box.cls)])
-                        temp.append(int(centerX / 81))
-                        temp.append(centerY)
-                        temp.append(area_inches)
-                        temp.append(points)
-                        temp.append(confidence)
-                        data.append(temp)
+#                         print("Area area_inches = ", area_inches)
+#                         print("Names = ", names[int(box.cls)])
+#                         print("Center points = ", centerX, centerY)
+#                         print("Points = ", points)
+#                         print("id:= ", count)
+#                         temp = []
+#                         temp.append(names[int(box.cls)])
+#                         temp.append(int(centerX / 81))
+#                         temp.append(centerY)
+#                         temp.append(area_inches)
+#                         temp.append(points)
+#                         temp.append(confidence)
+#                         data.append(temp)
 
-                    try:
-                        if len(result.boxes) > 0:
-                            t1 = threading.Thread(target=playSoundThread)
-                            t1.start()
-                    except:
-                        pass
+#                     try:
+#                         if len(result.boxes) > 0:
+#                             t1 = threading.Thread(target=playSoundThread)
+#                             t1.start()
+#                     except:
+#                         pass
 
-            with open(
-                "projects/" + project + "/output/" + modelName + filename + ".csv", "a"
-            ) as csvfile:
-                csvwriter = csv.writer(csvfile)
-                for row in data:
-                    csvwriter.writerow(row)
+#             with open(
+#                 "./projects/" + project + "/output/" + modelName + filename + ".csv", "a"
+#             ) as csvfile:
+#                 csvwriter = csv.writer(csvfile)
+#                 for row in data:
+#                     csvwriter.writerow(row)
 
-            # convert the image to base64
-            _, img_encoded = cv2.imencode(".jpg", np.array(image_np))
-            img_bytes = img_encoded.tobytes()
-            yield (
-                b"--frame\r\n" b"Content-Type: image/jpeg\r\n\r\n" + img_bytes + b"\r\n"
-            )
-    pass
+#             # convert the image to base64
+#             _, img_encoded = cv2.imencode(".jpg", np.array(image_np))
+#             img_bytes = img_encoded.tobytes()
+#             yield (
+#                 b"--frame\r\n" b"Content-Type: image/jpeg\r\n\r\n" + img_bytes + b"\r\n"
+#             )
+#     pass
 
 
 @csrf_exempt
@@ -1005,12 +960,13 @@ def realtimePrediction(request):
     cameraIndex = request.GET["cameraIndex"]
     project = request.GET["project"]
     modelName = request.GET["modelName"]
+    outputFile = request.GET["outputFile"]
     try:
         cameraIndex = int(cameraIndex)
         # read the camera using opencv
         try:
             return StreamingHttpResponse(
-                webcam(cameraIndex, project, modelName),
+                webcam(cameraIndex, project, modelName, outputFile),
                 content_type="multipart/x-mixed-replace;boundary=frame",
             )
         except Exception as e:
@@ -1019,18 +975,24 @@ def realtimePrediction(request):
                 image,
                 content_type="image/png",
             )
-    except:
-        try:
-            return StreamingHttpResponse(
-                mainCam(cameraIndex, project, modelName),
-                content_type="multipart/x-mixed-replace;boundary=frame",
-            )
-        except Exception as e:
-            image = open("static/error.png", "rb").read()
-            return HttpResponse(
-                image,
-                content_type="image/png",
-            )
+    except Exception as e:
+        # try:
+        #     return StreamingHttpResponse(
+        #         mainCam(cameraIndex, project, modelName),
+        #         content_type="multipart/x-mixed-replace;boundary=frame",
+        #     )
+        # except Exception as e:
+        #     image = open("static/error.png", "rb").read()
+        #     return HttpResponse(
+        #         image,
+        #         content_type="image/png",
+        #     )
+        print(e)
+        image = open("static/error.png", "rb").read()
+        return HttpResponse(
+            image,
+            content_type="image/png",
+        )
 
 
 def toggleRealtimePrediction(request):
@@ -1116,7 +1078,7 @@ def modelDetails(request):
         model = request.GET["model"]
         # Define the path to the results CSV file
         csvFile = "runs/segment/" + model + "/results.csv"
-        # csvFile = "projects/" + project + "/models/" + model + "/results.csv"
+        # csvFile = "./projects/" + project + "/models/" + model + "/results.csv"
         # Initialize an empty list to store the model details
         data = []
         # Open the CSV file and read the rows
@@ -1451,25 +1413,25 @@ def projectDetailsFetch(request):
     data["images"] = []
 
     # list all folder names in projects/fabric.fabricName/datasets
-    datasets = os.listdir("projects/" + fname + "/datasets")
+    datasets = os.listdir("./projects/" + fname + "/datasets")
     datasetDetail = []
     for dataset in datasets:
         temp = {}
         temp["datasetName"] = dataset
-        trainPath = "projects/" + fname + "/datasets/" + dataset + "/train/images/"
+        trainPath = "./projects/" + fname + "/datasets/" + dataset + "/train/images/"
         temp["images"] = []
         for image in os.listdir(trainPath)[:6]:
             temp["images"].append(
                 fname + "/datasets/" + dataset + "/train/images/" + image
             )
         temp["trainCount"] = len(
-            os.listdir("projects/" + fname + "/datasets/" + dataset + "/train/images/")
+            os.listdir("./projects/" + fname + "/datasets/" + dataset + "/train/images/")
         )
         temp["validCount"] = len(
-            os.listdir("projects/" + fname + "/datasets/" + dataset + "/test/images/")
+            os.listdir("./projects/" + fname + "/datasets/" + dataset + "/test/images/")
         )
         temp["testCount"] = len(
-            os.listdir("projects/" + fname + "/datasets/" + dataset + "/valid/images/")
+            os.listdir("./projects/" + fname + "/datasets/" + dataset + "/valid/images/")
         )
 
         data["images"].append(temp["images"][0])
@@ -1478,8 +1440,8 @@ def projectDetailsFetch(request):
         datasetDetail.append(temp)
     data["datasetDetail"] = datasetDetail
     folders = []
-    for folder in os.listdir("projects/" + fname + "/models"):
-        if os.path.isdir("projects/" + fname + "/models/" + folder):
+    for folder in os.listdir("./projects/" + fname + "/models"):
+        if os.path.isdir("./projects/" + fname + "/models/" + folder):
             folders.append(folder)
     data["models"] = folders
 
@@ -1488,38 +1450,29 @@ def projectDetailsFetch(request):
 
 @csrf_exempt
 def cameraListFetcher(request):
-    global h
     try:
         cameras = []
-        count = 0
-        for i in h.device_info_list:
-            cameras.append([i.serial_number, i.display_name])
-            count += 1
-        if count > 0:
-            return HttpResponse(
-                json.dumps({"data": cameras}), content_type="application/json"
-            )
-        else:
-            raise Exception("No Camera Found")
-    except Exception as e:
-        print(e)
-        # get all camera using cv2
-        cameras = []
         for i in range(10):
-            try:
-                cap = cv2.VideoCapture(i)
-                if cap is None or not cap.isOpened():
-                    pass
-                else:
-                    id = i
-                    name = "Camera " + str(i)
-                    cameras.append([id, name])
-                cap.release()
-            except:
-                pass
+            id = i
+            name = "Camera " + str(i)
+            cameras.append([id, name])
+            # try:
+            #     cap = cv2.VideoCapture(i)
+            #     if cap is None or not cap.isOpened():
+            #         pass
+            #     else:
+            #         id = i
+            #         name = "Camera " + str(i)
+            #         cameras.append([id, name])
+            #     cap.release()
+            # except:
+            #     pass
         return HttpResponse(
             json.dumps({"data": cameras}), content_type="application/json"
         )
+    except Exception as e:
+        print(e)
+        pass
 
 
 @csrf_exempt
@@ -1531,6 +1484,7 @@ def CameraSetting(request):
             exposure = request.POST.get("exposure", None)
             saturation = request.POST.get("saturation", None)
             contrast = request.POST.get("contrast", None)
+            confidence = request.POST.get("confidence", 0.1)
             if exposure is not None:
                 cameraSetting["Camera" + str(cameraIndex)]["exposure"] = int(exposure)
             if saturation is not None:
@@ -1539,6 +1493,7 @@ def CameraSetting(request):
                 )
             if contrast is not None:
                 cameraSetting["Camera" + str(cameraIndex)]["contrast"] = float(contrast)
+            cameraSetting["Camera" + str(cameraIndex)]["confidence"] = float(confidence)
             return HttpResponse(
                 json.dumps(
                     {

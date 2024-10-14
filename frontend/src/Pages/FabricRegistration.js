@@ -26,7 +26,7 @@ const FabricRegistration = () => {
     }, []);
 
     return (
-        <div className="min-h-screen w-[calc(100%-2rem)] mx-auto h-full mb-5">
+        <div className="min-h-screen max-w-full h-full m-5">
             <div className="p-[2px] w-full h-full text-black mx-auto mt-5 backdrop-blur-xl rounded-none lg:rounded-xl overflow-hidden">
                 <div className="mt-4 grid grid-cols-2 gap-6">
                     <div className="grid grid-cols-2 gap-4 gap-y-2">

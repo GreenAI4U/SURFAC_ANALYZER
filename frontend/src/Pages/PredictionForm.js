@@ -135,7 +135,7 @@ const PredictionForm = () => {
             <form className="w-full h-full text-black mx-auto mt-5 backdrop-blur-xl rounded-none lg:rounded-xl overflow-hidden">
                 <div className="mt-4 ">
                     <div className="grid grid-cols-2 gap-4 gap-y-1 ">
-                        <div className="grid grid-rows-3 gap-4 gap-y-1 h-64 mb-5 border border-primary-700 rounded-lg p-2">
+                        <div className="grid grid-rows-3 gap-4 gap-y-1 h-64 mb-5 border border-primary-700 p-2">
                             <label className="block text-sm">
                                 <span>Project</span>
                                 <span className="relative mt-1.5 flex">
@@ -160,7 +160,7 @@ const PredictionForm = () => {
                                         }}
                                         id="project"
                                         name="project"
-                                        className="form-input outline-none peer w-full rounded-lg border bg-white border-slate-300 bg-transparent px-3 py-2 pl-9 text-black hover:border-primary-700 focus:border-primary "
+                                        className="form-input outline-none peer w-full border bg-white border-slate-300 bg-transparent px-3 py-2 pl-9 text-black hover:border-primary-700 focus:border-primary "
                                     >
                                         <option selected value="">
                                             --Select Project--
@@ -195,7 +195,7 @@ const PredictionForm = () => {
                             <label className="block text-sm">
                                 <span>Path to model</span>
                                 <span className="relative mt-1.5 flex">
-                                    <select required id="model" name="model" className="form-input outline-none peer w-full rounded-lg border border-slate-300 bg-white text-black px-3 py-2 pl-9 placeholder:font-light hover:border-primary-700 focus:border-primary dark:border-navy-450 dark:hover:border-navy-400 dark:focus:border-accent">
+                                    <select required id="model" name="model" className="form-input outline-none peer w-full border border-slate-300 bg-white text-black px-3 py-2 pl-9 placeholder:font-light hover:border-primary-700 focus:border-primary dark:border-navy-450 dark:hover:border-navy-400 dark:focus:border-accent">
                                         <option selected disabled value="">
                                             --Select Model--
                                         </option>
@@ -220,25 +220,25 @@ const PredictionForm = () => {
                                             setProjects(data["data"]);
                                         });
                                 }}
-                                className="bg-gradient-to-br  from-primary-500 via-primary-700 to-primary-700 hover:from-primary-500 hover:via-primary-600 hover:to-primary-600 rounded-lg flex items-center justify-center cursor-pointer transition-all duration-3"
+                                className="bg-gradient-to-br  from-primary-500 via-primary-700 to-primary-700 hover:from-primary-500 hover:via-primary-600 hover:to-primary-600 flex items-center justify-center cursor-pointer transition-all duration-3"
                             >
                                 <p className="font-mono font-meduim text-white">Click Here To Refresh Project List</p>
                             </div>
                         </div>
 
-                        <div className="grid grid-rows-3 gap-4 gap-y-1 h-64 mb-5 border border-primary-700 rounded-lg p-2">
+                        <div className="grid grid-rows-3 gap-4 gap-y-1 h-64 mb-5 border border-primary-700 p-2">
                             <label className="block text-sm">
                                 <span>Select Input Type</span>
                                 <div>
                                     <ul className="flex items-center gap-3 mt-2">
-                                        <TabNavItem classes="bg-primary-500 rounded-lg" title="Image" id="image" activeTab={activeTab} setActiveTab={setActiveTab} />
-                                        <TabNavItem classes="bg-primary-500 rounded-lg" title="Video" id="video" activeTab={activeTab} setActiveTab={setActiveTab} />
-                                        <TabNavItem classes="bg-primary-500 rounded-lg" title="URL" id="url" activeTab={activeTab} setActiveTab={setActiveTab} />
-                                        <TabNavItem classes="bg-primary-500 rounded-lg" title="Camera" id="camera" activeTab={activeTab} setActiveTab={setActiveTab} />
+                                        <TabNavItem classes="bg-primary-500" title="Image" id="image" activeTab={activeTab} setActiveTab={setActiveTab} />
+                                        <TabNavItem classes="bg-primary-500" title="Video" id="video" activeTab={activeTab} setActiveTab={setActiveTab} />
+                                        <TabNavItem classes="bg-primary-500" title="URL" id="url" activeTab={activeTab} setActiveTab={setActiveTab} />
+                                        <TabNavItem classes="bg-primary-500" title="Camera" id="camera" activeTab={activeTab} setActiveTab={setActiveTab} />
                                     </ul>
                                     <div>
                                         <TabContent id="image" activeTab={activeTab}>
-                                            <div className="h-40 w-full mt-3 text-white border border-white/10 rounded-lg bg-gradient-to-br  from-primary-500 via-primary-700 to-primary-700 hover:from-primary-500 hover:via-primary-600 hover:to-primary-600 backdrop-blur-xl inner-shadow relative flex flex-col items-center justify-center cursor-pointer transition-all duration-300 overflow-hidden">
+                                            <div className="h-40 w-full mt-3 text-white border border-white/10 bg-gradient-to-br  from-primary-500 via-primary-700 to-primary-700 hover:from-primary-500 hover:via-primary-600 hover:to-primary-600 backdrop-blur-xl inner-shadow relative flex flex-col items-center justify-center cursor-pointer transition-all duration-300 overflow-hidden">
                                                 <div id="chooseImageFile" className=" flex flex-col items-center justify-center">
                                                     <input
                                                         onChange={() => {
@@ -267,7 +267,7 @@ const PredictionForm = () => {
                                             </div>
                                         </TabContent>
                                         <TabContent id="video" activeTab={activeTab}>
-                                            <div className="h-40 w-full mt-3 text-white border border-white/10 rounded-lg bg-gradient-to-br  from-primary-500 via-primary-700 to-primary-700 hover:from-primary-500 hover:via-primary-600 hover:to-primary-600 backdrop-blur-xl inner-shadow relative flex flex-col items-center justify-center cursor-pointer transition-all duration-300">
+                                            <div className="h-40 w-full mt-3 text-white border border-white/10 bg-gradient-to-br  from-primary-500 via-primary-700 to-primary-700 hover:from-primary-500 hover:via-primary-600 hover:to-primary-600 backdrop-blur-xl inner-shadow relative flex flex-col items-center justify-center cursor-pointer transition-all duration-300">
                                                 <input type="file" name="video" accept="video/mp4,video/x-m4v,video/*" className="absolute top-0 left-0 w-full h-full opacity-0 cursor-pointer" />
                                                 <svg width="50px" height="50px" className="text-white" viewBox="0 0 32 32">
                                                     <path fill="currentColor" d="M26.958,11.076C26.49,5.993,22.203,2,17,2c-4.379,0-8.254,2.899-9.543,7.015 c-4.26-0.262-7.875,3.381-7.418,7.728C0.419,20.357,3.661,23,7.295,23H12v6c0,0.552,0.448,1,1,1h6c0.552,0,1-0.448,1-1v-6h5.788 c2.99,0,5.684-2.097,6.139-5.053C32.449,14.557,30.11,11.584,26.958,11.076z M18,21v7h-4v-7h-2.586L16,16.414L20.586,21H18z  M25.856,21H22l-5.293-5.293c-0.391-0.391-1.024-0.391-1.414,0L10,21H7.223c-2.61,0-4.945-1.903-5.199-4.5 C1.733,13.52,4.078,11,7,11c0.345,0,0.693,0.036,1.033,0.107c0.534,0.111,1.035-0.274,1.151-0.807C9.975,6.647,13.257,4,17,4 c4.395,0,7.974,3.563,8,7.952C25.003,12.51,25.443,13,26.001,13c2.395,0.001,4.305,2.117,3.958,4.578 C29.678,19.572,27.869,21,25.856,21z" />
@@ -277,7 +277,7 @@ const PredictionForm = () => {
                                         </TabContent>
                                         <TabContent id="url" activeTab={activeTab}>
                                             <div className="relative mt-3 w-full">
-                                                <input type="text" name="" placeholder="Enter URL" className="border border-transparent bg-white w-full rounded-lg px-3 py-2 pl-8 placeholder:text-black text-black outline-none focus:outline-none hover:border-primary-700" />
+                                                <input type="text" name="" placeholder="Enter URL" className="border border-transparent bg-white w-full px-3 py-2 pl-8 placeholder:text-black text-black outline-none focus:outline-none hover:border-primary-700" />
                                                 <svg xmlns="http://www.w3.org/2000/svg" width={"1.2em"} height={"1.2em"} fill="currentColor" className="absolute top-1/2 -translate-y-1/2 left-2 text-primary-700" viewBox="0 0 16 16">
                                                     <path d="M4.715 6.542 3.343 7.914a3 3 0 1 0 4.243 4.243l1.828-1.829A3 3 0 0 0 8.586 5.5L8 6.086a1.002 1.002 0 0 0-.154.199 2 2 0 0 1 .861 3.337L6.88 11.45a2 2 0 1 1-2.83-2.83l.793-.792a4.018 4.018 0 0 1-.128-1.287z" />
                                                     <path d="M6.586 4.672A3 3 0 0 0 7.414 9.5l.775-.776a2 2 0 0 1-.896-3.346L9.12 3.55a2 2 0 1 1 2.83 2.83l-.793.792c.112.42.155.855.128 1.287l1.372-1.372a3 3 0 1 0-4.243-4.243L6.586 4.672z" />
@@ -317,7 +317,7 @@ const PredictionForm = () => {
                                                         }
                                                     }}
                                                     id="cameraSelect"
-                                                    className="w-full outline-none focus:outline-none rounded-lg p-[2px] font-medium text-black"
+                                                    className="w-full outline-none focus:outline-none p-[2px] font-medium text-black"
                                                 >
                                                     <option value="null" selected>
                                                         --Select Camera--
@@ -329,7 +329,7 @@ const PredictionForm = () => {
                                                     ))}
                                                 </select>
                                             </div>
-                                            <div className="group h-32 w-full text-white border border-white/10 rounded-lg bg-gradient-to-br  from-primary-500 via-primary-700 to-primary-700 hover:from-primary-500 hover:via-primary-600 hover:to-primary-600 backdrop-blur-xl inner-shadow relative flex flex-col items-center justify-center overflow-hidden">
+                                            <div className="group h-32 w-full text-white border border-white/10 bg-gradient-to-br  from-primary-500 via-primary-700 to-primary-700 hover:from-primary-500 hover:via-primary-600 hover:to-primary-600 backdrop-blur-xl inner-shadow relative flex flex-col items-center justify-center overflow-hidden">
                                                 <div
                                                     onClick={() => {
                                                         document.getElementById("videoPlaceholder").classList.add("hidden");
@@ -414,19 +414,19 @@ const PredictionForm = () => {
                         onClick={(event) => {
                             prediction(event);
                         }}
-                        className="bg-gradient-to-br  from-primary-500 via-primary-700 to-primary-700 hover:from-primary-500 hover:via-primary-600 hover:to-primary-600 w-full p-1 py-2 mb-5 rounded-lg text-center cursor-pointer transition-all duration-300"
+                        className="bg-gradient-to-br  from-primary-500 via-primary-700 to-primary-700 hover:from-primary-500 hover:via-primary-600 hover:to-primary-600 w-full p-1 py-2 mb-5 text-center cursor-pointer transition-all duration-300"
                     >
                         <p className="font-mono font-medium text-white">Generate Label Predictions</p>
                     </div>
 
                     <div className="grid grid-cols-2 gap-4">
-                        <div className="bg-gradient-to-br  from-primary-100 to-primary-300 border border-primary-700 rounded-lg p-2 h-full">
+                        <div className="bg-gradient-to-br  from-primary-100 to-primary-300 border border-primary-700 p-2 h-full">
                             <p className="text-black">Full Results output(metrics, boxes, etc.)</p>
-                            <div className="border text-black border-primary-800 w-full h-96 overflow-y-auto p-1 rounded-lg mt-3">
+                            <div className="border text-black border-primary-800 w-full h-96 overflow-y-auto p-1 mt-3">
                                 <p id="predictInfo" style={{ fontFamily: "Consolas, monospace" }}></p>
                             </div>
                         </div>
-                        <div className="bg-gradient-to-br  from-primary-500 via-primary-700 to-primary-700 hover:from-primary-500 hover:via-primary-600 hover:to-primary-600/50 rounded-lg h-96 relative overflow-hidden ">
+                        <div className="bg-gradient-to-br  from-primary-500 via-primary-700 to-primary-700 hover:from-primary-500 hover:via-primary-600 hover:to-primary-600/50 h-96 relative overflow-hidden ">
                             <p className="bg-primary-900 w-fit rounded-br-lg rounded-tl-lg p-1 px-2 font-mono absolute top-0 left-0">Labeled Image</p>
                             <img id="outputImage" name="outputImage" src="https://via.placeholder.com/640/" alt="" className="w-full h-full object-contain" />
                         </div>

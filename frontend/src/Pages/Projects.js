@@ -12,7 +12,7 @@ const Projects = () => {
             });
     }, []);
     return (
-        <div className="text-white w-[calc(100%-2rem)] mx-auto h-full my-5">
+        <div className="text-white max-w-full h-full m-5 ">
             <div className="flex items-center justify-between">
                 <div className="relative">
                     <input
