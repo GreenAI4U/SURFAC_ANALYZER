@@ -55,7 +55,7 @@ os.environ['YOLO_VERBOSE'] = 'False'
 realtimePredict = False
 caps = {}
 cameraSetting = {}
-ser = serial.Serial("COM4", 9600)
+# ser = serial.Serial("COM4", 9600)
 try:
     device = torch.device("cuda")
 except:
